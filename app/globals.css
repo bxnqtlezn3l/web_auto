@@ -1,0 +1,242 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 20% 98%;
+    --foreground: 240 6% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
+    --primary: 240 6% 10%;
+    --primary-foreground: 0 0% 98%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 4% 42%;
+    --border: 240 6% 88%;
+    --input: 240 6% 88%;
+    --ring: 240 6% 10%;
+    --accent: 240 5% 92%;
+    --accent-foreground: 240 6% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --radius: 0.625rem;
+    --navbar-height: 4rem;
+    /* ขอบปุ่ม rainbow หน้าแรก */
+    --color-1: #ff4242;
+    --color-2: #a855f7;
+    --color-3: #22d3ee;
+    --color-4: #4ade80;
+    --color-5: #facc15;
+  }
+
+  .dark {
+    --background: 240 10% 6%;
+    --foreground: 0 0% 96%;
+    --card: 240 8% 10%;
+    --card-foreground: 0 0% 96%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 10% 6%;
+    --muted: 240 6% 16%;
+    --muted-foreground: 240 5% 58%;
+    --border: 240 6% 18%;
+    --input: 240 6% 18%;
+    --ring: 240 5% 64%;
+    --accent: 240 6% 18%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 62% 48%;
+    --destructive-foreground: 0 0% 98%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer utilities {
+  /* หน้าแรกสไตล์ SaaS — ตารางบางบนพื้นดำ */
+  .bg-landing-grid {
+    background-color: #09090b;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+    background-size: 72px 72px;
+    background-position: center -1px;
+  }
+
+  /* แดชบอร์ด — เส้นตารางไม่รวมสีพื้น (ใช้คู่กับพื้นหลังหน้า) */
+  .bg-dash-grid-light {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.045) 1px, transparent 1px);
+    background-size: 72px 72px;
+    background-position: center -1px;
+  }
+
+  .bg-dash-grid-dark {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+    background-size: 72px 72px;
+    background-position: center -1px;
+  }
+
+  .landing-glow-cta {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 24px 80px -12px rgba(59, 130, 246, 0.45),
+      0 12px 40px -8px rgba(139, 92, 246, 0.25);
+  }
+}
+
+@keyframes landing-rainbow-shift {
+  0% {
+    background-position:
+      0 0,
+      0 0,
+      0% 50%;
+  }
+  100% {
+    background-position:
+      0 0,
+      0 0,
+      200% 50%;
+  }
+}
+
+@keyframes landing-rainbow-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    filter: blur(0.75rem);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(0.85rem);
+  }
+}
+
+.landing-rainbow-cta {
+  background-image:
+    linear-gradient(#121213, #121213),
+    linear-gradient(
+      #121213 50%,
+      rgba(18, 18, 19, 0.6) 80%,
+      rgba(18, 18, 19, 0)
+    ),
+    linear-gradient(
+      90deg,
+      var(--color-1),
+      var(--color-5),
+      var(--color-3),
+      var(--color-4),
+      var(--color-2)
+    );
+  background-size:
+    auto,
+    auto,
+    200% auto;
+  background-clip: padding-box, border-box, border-box;
+  background-origin: border-box, border-box, border-box;
+  border: 0.125rem solid transparent;
+  animation: landing-rainbow-shift 4s linear infinite;
+}
+
+.landing-rainbow-cta::before {
+  content: "";
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  z-index: -1;
+  height: 20%;
+  width: 60%;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-1),
+    var(--color-5),
+    var(--color-3),
+    var(--color-4),
+    var(--color-2)
+  );
+  animation: landing-rainbow-glow 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* uiverse.io/catraco/hungry-squid-59 (namespaced) */
+.hungry-squid-toggle input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  z-index: 2;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.hungry-squid-checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  transition: 0.3s;
+  transform: scale(0);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hungry-squid-toggle input:checked ~ .hungry-squid-checkmark {
+  background-color: #20c580;
+  transform: scale(1);
+}
+
+.hungry-squid-checkmark::after {
+  content: "";
+  position: absolute;
+  left: 0.45em;
+  top: 0.25em;
+  display: none;
+  width: 0.3em;
+  height: 0.5em;
+  border: solid white;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+.hungry-squid-toggle input:checked ~ .hungry-squid-checkmark::after {
+  display: block;
+}
+
+.hungry-squid-toggle input:checked ~ .hungry-squid-celebrate {
+  display: block;
+}
+
+.hungry-squid-celebrate {
+  position: absolute;
+  transform-origin: center;
+  animation: kfr-hungry-squid-celebrate 0.4s;
+  animation-fill-mode: forwards;
+  display: none;
+  stroke: #20c580;
+  pointer-events: none;
+}
+
+@keyframes kfr-hungry-squid-celebrate {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+    display: none;
+  }
+}

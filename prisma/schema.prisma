@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  name         String?  @db.VarChar(191)
+  /** Cookie เบราว์เซอร์สำหรับ Graph (เก็บร่วมแถว user) — คงไว้สำหรับย้ายข้อมูลเดิม */
+  facebookCookie      String? @map("facebook_cookie") @db.LongText
+  /** Access token สำหรับ Graph — คงไว้สำหรับย้ายข้อมูลเดิม */
+  facebookAccessToken String? @map("facebook_access_token") @db.LongText
+  /** บัญชี Facebook ที่ใช้งานอยู่ (อ้างอิง user_facebook_accounts.id) */
+  activeFacebookAccountId String? @map("active_facebook_account_id") @db.VarChar(191)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  facebookAccounts UserFacebookAccount[]
+
+  @@map("users")
+}
+
+/** หลายบัญชี Facebook ต่อผู้ใช้แอป */
+model UserFacebookAccount {
+  id                  String   @id @default(cuid())
+  userId              String   @map("user_id")
+  label               String   @default("บัญชี Facebook") @db.VarChar(191)
+  /** ยัง “เชื่อมต่อแอป” อยู่ (อย่างน้อย 1 บัญชี, รวมกันได้สูงสุด 5) */
+  isConnected         Boolean  @default(true) @map("is_connected")
+  facebookCookie      String?  @map("facebook_cookie") @db.LongText
+  facebookAccessToken String?  @map("facebook_access_token") @db.LongText
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_facebook_accounts")
+}
+
+/** แถวเดียว (id = 1) เก็บตัวนับสำหรับหน้าแรก */
+model AppStat {
+  id                Int @id @default(1)
+  facebookMeSuccess Int @default(0) @map("facebook_me_success")
+
+  @@map("app_stats")
+}
